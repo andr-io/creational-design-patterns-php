@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="bg">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Софтуерни шаблони за създаване в php.">
+    <title>Софтуерни шаблони за създаване (в php)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="javascript/javascript.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Софтуерни шаблони за създаване в php</h1>
+    </header>
+
+    <main>
+    
+        <!--Навигация-->
+        <nav id="page-nav" class="page-nav" data-state="unkown">
+            <ul class="nav-list">
+                <li><a href="#prototype">Прототип</a></li>
+                <li><a href="#singleton">Сек</a></li>
+                <li><a href="#factory-method">Метод фабрика</a></li>
+                <li><a href="#static-factory">Статична фабрика</a></li>
+                <li><a href="#simple-factory">Проста фабрика</a></li>
+                <li><a href="#abstract-factory">Абстрактна фабрика</a></li>
+                <li><a href="#builder">Строител</a></li>
+                <li><a href="#pool">Пул</a></li>
+            </ul>
+        </nav>
+
+        <button id="menu-btn" onclick="menuBtnClicked()">
+            -&gt;
+         </button>
+
+        <div class="content-container">
+            <!-- Прототип -->
+            <article id="prototype">
+                <h2> Прототип </h2>
+                <p>
+                    Шаблонът за дизайн <em>Прототип</em> се използва за клониране на вече построени обекти. Така е възможно да се пропуснат скъпи проверки, които биха били необходими при създаване с конструктор. 
+                    Също така става възможно клонирането на обекти, без предварително да знаем нищо за техния тип. 
+                    В php е приложен този шаблон, като се използва запазената дума <a href="https://www.php.net/manual/en/language.oop5.cloning.php" target="_blank"><code class="inline-code">clone</code></a>.
+                    Тя създава плитко копие на обекта, след което се извиква метода <code class="inline-code">__clone()</code> на вече клонирания обект.
+                </p>
+                <figure id="fig1">
+                    <img class="uml-image" title="Примерна UML диаграма на Прототип" src="img/01_01_prototype.png" alt="Примерна UML диаграма на Прототип">
+                    <figcaption>Фигура 1. Примерна UML диаграма на <em>Прототип</em>.</figcaption>
+                </figure>
+
+                <figure id="code1">
+<pre><code>&lt;?php
+
+class Circle implements Shape
+{
+    private Point $center;
+    private float $radius;
+
+    public function __construct(Point $center, float $radius)
+    {
+        $this->center = $center;
+        $this->radius = $radius;
+    }
+
+    public function translate(Point $vector): void
+    {
+        $this->center->x += $vector->x;
+        $this->center->y += $vector->y;
+    }
+
+    public function __toString()
+    {
+        return "Circle with center $this->center and radius $this->radius";
+    }
+
+    public function __clone()
+    {
+        $this->center = clone $this->center;
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 1. Фрагмент от имплементация на <em>Прототип</em>.</figcaption>
+                    <p>
+                        В горния пример, при клониране на  обект от тип <code class="inline-code">Circle</code>, се извиква метода <code class="inline-code">__clone()</code> на клонирания обект. След това се клонира и
+                        обекта от референтен тип <code class="inline-code">Point</code>.
+                    </p>
+                </figure>
+                <p>
+                    Не трябва да се забравят и подводните камъни, които носи този шаблон. 
+                    При достатъчно сложна йерархия е възможно да има циклични зависимости, което да доведе до бездънна рекурсия от клониране. 
+                    Бърз начин за справяне с този проблем е да се сериализира и десериализира обекта.
+                </p>
+            </article>
+
+             <!-- Сек -->
+             <article id="singleton">
+                <h2>Сек</h2>
+                <p>
+                    Шаблонът за дизайн <em>Сек</em> позволява глобален достъп до обект от даден клас, като в същото време подсигурява, 
+                    че съществува най-много една истанция на обекта. Също позволява и късна инициализация на обекта. Примери за приложение са логове, връзки с бази данни, ключалки за файлове и т.н.
+                </p>
+                <figure id="fig2">
+                    <img class="uml-image" title="Примерна UML диаграма на Сек" src="img/01_02_singleton.png" alt="Примерна UML диаграма на Сек">
+                    <figcaption>Фигура 2. Примерна UML диаграма на <em>Сек</em>.</figcaption>
+                </figure>
+
+                <figure id="code2">
+<pre><code>&lt;?php
+
+final class Universe
+{
+    private static ?Universe $universe = null;
+
+    public static function getUniverse(): Universe
+    {
+        if (self::$universe == null)
+            self::$universe = new self();
+
+        return self::$universe;
+    }
+
+    private function __construct()
+    {
+        echo "Creating the universe\n";
+    }
+
+    private function __clone()
+    {
+        // No cloning
+    }
+
+    public function __wakeup()
+    {
+        throw new Exception("Cannot deserialize a singleton");
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 2. Примерна имплементация на <em>Сек</em>.</figcaption>
+                    <p>
+                        В горният пример е приложен шаблонът с късна инициализация. Забраняват се всички начини за създаване на обект от класа, извън самия клас, както и наследяването.
+                    </p>
+                </figure>
+                <p>
+                    Един от минусите на шаблона е че се затруднява тестването. Освен глобалния достъп, другият минус е липсата на гъвкавост. 
+                    Ако по-късно се установи, че се налага създаването на повече от един обект от съответния клас, самото рефакториране може да излезе скъпо. Някои разработчици на софтуер го считат и за анти-шаблон.
+                </p>
+            </article>
+
+             <!-- Метод фабрика -->
+             <article id="factory-method">
+                <h2> Метод фабрика </h2>
+                <p>
+                    <em>Метод фабриката</em>, позната още като <em>Виртуален конструктор</em>, дефинира някакъв метод за създаване на обекти, независимо дали е абстрактен или не, като 
+                    позволява на класовете наследници да презапишат този метод. По-този начин лесно се добавят нови класове към съществуваща вече имплементация.
+                </p>
+                <figure id="fig3">
+                    <img class="uml-image" title="Примерна UML диаграма на Метод фабрика" src="img/01_03_factory-method.png" alt="Примерна UML диаграма на Метод фабрика">
+                    <figcaption>Фигура 3. Примерна UML диаграма на <em>Метод фабрика</em>.</figcaption>
+                </figure>
+
+                <figure id="code3">
+<pre><code>&lt;?php
+
+interface Animal
+{
+    public function makeSound(): void;
+}
+
+
+interface AnimalFactory
+{
+    public function create(): Animal;
+}
+
+class Cat implements Animal
+{
+    public function makeSound(): void
+    {
+        echo "Meow";
+    }
+}
+
+class Horse implements Animal
+{
+    public function makeSound(): void
+    {
+        echo "EEEeee";
+    }
+}
+
+class CatFactory implements AnimalFactory
+{
+    public function create(): Animal
+    {
+        return new Cat();
+    }
+}
+
+class HorseFactory implements AnimalFactory
+{
+    public function create(): Animal
+    {
+        return new Horse();
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 3. Примерна имплементация на <em>Метод фабрика</em>.</figcaption>
+                    <p>
+                        В горния пример, креационният метод е <code class="inline-code">create()</code> на интерфейса <code class="inline-code">AnimalFactory</code>. 
+                        Чрез използването на този интерфейс, се делегира създаването на обектите на имплементиращите го класове.
+                    </p>
+                </figure>
+            </article>
+
+             <!-- Статична фабрика -->
+             <article id="static-factory">
+                <h2> Статична фабрика </h2>
+                <p>
+                    <em>Статичната фабрика</em> е клас, който съдържа статичен метод за създаване на обекти. Този подход може да доведе до трудности при тестване и рефакториране. Добре е да се помисли за алтернативен подход към проблема.
+                </p>
+                <figure id="fig4">
+                    <img class="uml-image" title="Примерна UML диаграма за Статична фабрика" src="img/01_04_static-factory.png" alt="Примерна UML диаграма на Статична фабрика">
+                    <figcaption>Фигура 4. Примерна UML диаграма за <em>Статична фабрика</em>.</figcaption>
+                </figure>
+
+                <figure id="code4">
+<pre><code>&lt;?php
+
+interface Animal
+{
+    public function makeSound(): void;
+}
+
+
+class Cat implements Animal
+{
+    public function makeSound(): void
+    {
+        echo "Meow";
+    }
+}
+
+class Horse implements Animal
+{
+    public function makeSound(): void
+    {
+        echo "EEEEeee";
+    }
+}
+
+final class StaticFactory
+{
+    public static function create(string $type): Animal
+    {
+        return match ($type)
+        {
+            'cat' => new Cat(),
+            'horse' => new Horse(),
+            default => throw new InvalidArgumentException("Unknown type"),
+        };
+    }
+
+    private function __construct()
+    {
+        // Empty
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 4. Примерна имплементация на <em>Статична фабрика</em>.</figcaption>
+                    <p>
+                        В горния пример е приложена Статична фабрика за създаване на обекти от тип <code class="inline-code">Animal</code>. 
+                        При добавяне на нов клас имплементиращ <code class="inline-code">Animal</code>, е нужно да се модифицира и креационния метод на Статичната фабрика.
+                    </p>
+                </figure>
+            </article>
+
+             <!-- Проста фабрика -->
+             <article id="simple-factory">
+                <h2> Проста фабрика </h2>
+                <p>
+                    Една от разликите между <em>Простата фабрика</em> и <em>Статичната фабрика</em> е, че вече методът не е статичен.
+                    Тоест, вече може да се правят всичките ООП магии: да се моква, да се тества, да се създават производни класове и т.н.
+                </p>
+                <figure id="fig5">
+                    <img class="uml-image" title="Примерна UML диаграма на Проста фабрика" src="img/01_05_simple-factory.png" alt="Примерна UML диаграма на Проста фабрика">
+                    <figcaption>Фигура 5. Примерна UML диаграма на <em>Проста фабрика</em>.</figcaption>
+                </figure>
+
+                <figure id="code5">
+<pre><code>&lt;?php
+
+class Cat
+{
+    public function makeSound(): void
+    {
+        echo "Meow";
+    }
+}
+
+class CatFactory
+{
+    public function create(): Cat
+    {
+        return new Cat();
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 5. Примерна имплементация на <em>Проста фабрика</em>.</figcaption>
+                    <p>
+                        В горния пример е приложена Проста фабрика за създаване на обекти от тип <code class="inline-code">Cat</code>.
+                    </p>
+                </figure>
+            </article>
+
+             <!-- Абстрактна фабрика -->
+             <article id="abstract-factory">
+                <h2> Абстрактна фабрика </h2>
+                <p>
+                    <q cite="https://refactoring.guru/design-patterns/abstract-factory">Шаблонът за дизайн <em>Абстрактна фабрика</em> се използва за създаване на фамилия от обекти, които са свързани или зависими, без да се интересуваме от
+                    конкретните техни класове.</q> Типичен пример за приложение на този шаблон са графичните елементи. В Уиндоус искаме всичко да си е Уиндоуско. 
+                    Няма смисъл да се комбинира бутонче за Линукс с прозорец за Уиндоус и иконки за Мак.
+                </p>
+                <figure id="fig6">
+                    <img class="uml-image" title="Примерна UML диаграма на Абстрактна фабрика" src="img/01_06_abstract-factory.png" alt="Примерна UML диаграма на Абстрактна фабрика">
+                    <figcaption>Фигура 6. Примерна UML диаграма на <em>Абстрактна фабрика</em>.</figcaption>
+                </figure>
+
+                <figure id="code6">
+<pre><code>&lt;?php
+
+class VillageFactory implements Settlement
+{
+    public function createNPC(): NPC
+    {
+        return new Villager();
+    }
+
+    public function createShop(): Shop
+    {
+        return new Market();
+    }
+
+    public function createHouse(): House
+    {
+        return new VillageHouse();
+    }
+}
+
+class CityFactory implements Settlement
+{
+    public function createNPC(): NPC
+    {
+        return new Citizen();
+    }
+
+    public function createShop(): Shop
+    {
+        return new Mall();
+    }
+
+    public function createHouse(): House
+    {
+        return new Skyscraper();
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 6. Фрагмент от имплементация на <em>Абстрактна фабрика</em>.</figcaption>
+                    <p>
+                        В горният пример е приложен шаблонът. Вижда се ясно кои ни са фамилиите от обекти които са свързани. 
+                        В последствие ако се окаже, че ни трябват и извънземни селища, си имплементираме нужните интерфеийси и си правим фабриката. 
+                        Тук е добре да се отбележи, че разширяването на функционалността става без да е нужно да се променят вече създадените класове. 
+                    </p>
+                </figure>
+            </article>
+
+             <!-- Строител -->
+             <article id="builder">
+                <h2> Строител </h2>
+                <p>
+                    За <em>Строител</em> са познати две версии на шаблона. Единият вариант е добре известен в Java и се използва само <em>Строител</em>.
+                    Другият вариант вкючва режисьор, който знае за интерфейса на <em>Строителя</em>, но не знае нищо за конкретните имлементации.
+                </p>
+                <figure id="fig7">
+                    <img class="uml-image" title="Примерна UML диаграма на Строител" src="img//01_07_builder.png" alt="Примерна UML диаграма на Строител">
+                    <figcaption>Фигура 7. Примерна UML диаграма на <em>Строител</em>.</figcaption>
+                </figure>
+
+                <figure id="code7">
+<pre><code>&lt;?php
+
+abstract class Builder
+{
+    public function createBase() {}
+    public function addWheels() {}
+    public function addEngine() {}
+    public function addSeats() {}
+    public function addBrakes() {}
+
+}
+
+class Director
+{
+    public function build(Builder $builder): void
+    {
+        $builder->createBase();
+        $builder->addSeats();
+        $builder->addWheels();
+        $builder->addBrakes();
+        $builder->addEngine();
+    }
+}
+
+?&gt;</code></pre>
+                    <figcaption>Код 7. Фрагмент от имплементация на <em>Строител</em> с режисьор.</figcaption>
+                    <p>
+                        Тук режисьорът знае как се строи целия обект, докато строителя знае как се правят отделните части. 
+                        Кодът на клиента не трябва да знае как се конструира даден обект, а само какъв конкретен строител му трябва. 
+                        Режисьорът пък не се интересува от конкретния строител, а само от това че имплементира някакъв общ интерфейс 
+                        и съответно известява строителя, когато някоя стъпка трябва да бъде направена.
+                    </p>
+                </figure>
+            </article>
+
+             <!-- Пул -->
+             <article id="pool">
+                <h2> Пул </h2>
+                <p>
+                    Шаблонът за дизайн <em>Пул</em> позволява преизползването на вече построени обекти. 
+                    Клиентът си взима някакъв обект от Пула, използва го известно време, след което го връща обратно. 
+                    След това, ако е необходимо, се обработва обекта за повторно преизползване. Добре е да се ползва при инстанциацията на <strong>много</strong> обекти, 
+                    чието създаване е скъпо, но пък техния живот е сравнително кратък.
+                    Добър пример за приложение на този шаблон е при нишките на операционната система.
+                </p>
+                <figure id="fig8">
+                    <img class="uml-image" title="Примерна UML диаграма на Пул" src="img/01_08_pool.png" alt="Примерна UML диаграма на Пул">
+                    <figcaption>Фигура 8. Примерна UML диаграма на <em>Пул</em>.</figcaption>
+                </figure>
+
+                <figure id="code8">
+
+<pre><code>$horse = $horsePool->getHorse();
+
+$horse->makeSound();
+
+$horsePool->dispose($horse);
+</code></pre>
+                    <figcaption>Код 8. Примерно приложение на <em>Пул</em>.</figcaption>
+                    <p>
+                        В горния пример се взима обект от тип <code class="inline-code">Horse</code>, използва се и се връща обратно в Пула.
+                    </p>
+                </figure>
+            </article>
+        </div>
+    </main>
+    
+    <footer>
+        <ul>
+            <li>
+                <h3>Списък с фигури:</h3>
+                <ol id="figure-list">
+                    <li><a href="#fig1">Фигура 1. Примерна UML диаграма на <em>Прототип</em></a></li>
+                    <li><a href="#fig2">Фигура 2. Примерна UML диаграма на <em>Сек</em></a></li>
+                    <li><a href="#fig3">Фигура 3. Примерна UML диаграма на <em>Метод фабрика</em></a></li>
+                    <li><a href="#fig4">Фигура 4. Примерна UML диаграма за <em>Статична фабрика</em></a></li>
+                    <li><a href="#fig5">Фигура 5. Примерна UML диаграма на <em>Проста фабрика</em></a></li>
+                    <li><a href="#fig6">Фигура 6. Примерна UML диаграма на <em>Абстрактна фабрика</em></a></li>
+                    <li><a href="#fig7">Фигура 7. Примерна UML диаграма на <em>Строител</em></a></li>
+                    <li><a href="#fig8">Фигура 8. Примерна UML диаграма на <em>Пул</em></a></li>
+                </ol>
+            </li>
+            <li>
+                <h3>Списък с код:</h3>
+                <ol id="code-list">
+                    <li><a href="#code1">Код 1. Фрагмент от имплементация на <em>Прототип</em></a></li>
+                    <li><a href="#code2">Код 2. Примерна имплементация на <em>Сек</em></a></li>
+                    <li><a href="#code3">Код 3. Примерна имплементация на <em>Метод фабрика</em></a></li>
+                    <li><a href="#code4">Код 4. Примерна имплементация на <em>Статична фабрика</em></a></li>
+                    <li><a href="#code5">Код 5. Примерна имплементация на <em>Проста фабрика</em></a></li>
+                    <li><a href="#code6">Код 6. Фрагмент от имплементация на <em>Абстрактна фабрика</em></a></li>
+                    <li><a href="#code7">Код 7. Фрагмент от имплементация на <em>Строител</em> с режисьор</a></li>
+                    <li><a href="#code8">Код 8. Примерно приложение на <em>Пул</em></a></li>
+                </ol>
+            </li>
+            <li>
+                <h3>Литература:</h3>
+                <ol id="literature-list">
+                    <li>The PHP Group, <em>The PHP Manual</em>, <a href="https://www.php.net/manual/en/language.oop5.cloning.php">[https://www.php.net/manual/en/language.oop5.cloning.php]</a>, Последно посетен на: <time datetime="2022-12-16">16.12.2022</time></li>
+                    <li>Dominik Liebler and contributors, <em>DesignPatternsPHP</em>, <a href="https://designpatternsphp.readthedocs.io/ca/latest/Creational/README.html">[https://designpatternsphp.readthedocs.io/ca/latest/Creational/README.html]</a>, Последно посетен на: <time datetime="2022-12-16">16.12.2022</time></li>
+                    <li>Refactoring.Guru, <em> Creational Design Patterns</em>, <a href="https://refactoring.guru/design-patterns/creational-patterns">[https://refactoring.guru/design-patterns/creational-patterns]</a>, Последно посетен на: <time datetime="2022-12-16">16.12.2022</time></li>
+                    <li>Michael Safyan, <em>Singleton Anti-Pattern</em>, <a href="https://www.michaelsafyan.com/tech/design/patterns/singleton">[https://www.michaelsafyan.com/tech/design/patterns/singleton]</a>, Последно посетен на: <time datetime="2022-12-16">16.12.2022</time></li>
+                </ol>
+            </li>
+        </ul>
+
+    </footer>
+
+</body>
+
+</html>
