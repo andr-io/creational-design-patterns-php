@@ -1,4 +1,5 @@
 let menuBtnClicked;
+let closeMenuOnSmallScreen;
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -10,14 +11,6 @@ window.addEventListener('DOMContentLoaded', () => {
         menu.dataset.state = "open";
     } else {
         menu.dataset.state = "closed";
-    }
-
-    function btnClicked() {
-        if (menu.dataset.state === "closed") {
-            openMenu();
-        } else {
-            closeMenu();
-        }
     }
 
     function openMenu() {
@@ -36,6 +29,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function btnClicked() {
+        if (menu.dataset.state === "closed") {
+            openMenu();
+        } else {
+            closeMenu();
+        }
+    }
+
+    function closeMenuResponsive() {
+        if(window.innerWidth < breakpoint) {
+            closeMenu();
+        }
+    }
+
     window.onresize = () => {
         if (window.innerWidth >= breakpoint) {
             openMenu();
@@ -45,5 +52,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     menuBtnClicked = btnClicked;
+    closeMenuOnSmallScreen = closeMenuResponsive;
 });
+
+
 
