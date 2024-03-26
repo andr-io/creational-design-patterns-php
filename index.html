@@ -57,7 +57,11 @@
                     Тя създава плитко копие на обекта, след което се извиква метода <code class="inline-code">__clone()</code> на вече клонирания обект.
                 </p>
                 <figure id="fig1">
-                    <img class="uml-image" title="Примерна UML диаграма на Прототип" src="img/01_01_prototype.webp" alt="Примерна UML диаграма на Прототип" width="1046" height="718">
+                    <img 
+                        src="img/01_01_prototype_1046x718.webp" 
+                        srcset="img/01_01_prototype_523x359.webp 523w, img/01_01_prototype_840x577.webp 840w, img/01_01_prototype_1046x718.webp 1046w"
+                        sizes="(min-width: 1280px) 840px, (min-width: 1000px) calc(83.08vw - 207px), calc(100vw - 10rem)"
+                        class="uml-image" title="Примерна UML диаграма на Прототип" alt="Примерна UML диаграма на Прототип" width="1046" height="718">
                     <figcaption>Фигура 1. Примерна UML диаграма на <em>Прототип</em>.</figcaption>
                 </figure>
 
@@ -114,7 +118,7 @@ class Circle implements Shape
                     че съществува най-много една истанция на обекта. Също позволява и късна инициализация на обекта. Примери за приложение са логове, връзки с бази данни, ключалки за файлове и т.н.
                 </p>
                 <figure id="fig2">
-                    <img class="uml-image" title="Примерна UML диаграма на Сек" src="img/01_02_singleton.webp" alt="Примерна UML диаграма на Сек" loading="lazy" width="349" height="418">
+                    <img src="img/01_02_singleton_349x718.webp" class="uml-image" title="Примерна UML диаграма на Сек" alt="Примерна UML диаграма на Сек" loading="lazy" width="349" height="418">
                     <figcaption>Фигура 2. Примерна UML диаграма на <em>Сек</em>.</figcaption>
                 </figure>
 
@@ -169,7 +173,11 @@ final class Universe
                     позволява на класовете наследници да презапишат този метод. По-този начин лесно се добавят нови класове към съществуваща вече имплементация.
                 </p>
                 <figure id="fig3">
-                    <img class="uml-image" title="Примерна UML диаграма на Метод фабрика" src="img/01_03_factory-method.webp" alt="Примерна UML диаграма на Метод фабрика" loading="lazy" width="941" height="698">
+                    <img 
+                        src="img/01_03_factory-method_941x698.webp"
+                        srcset="img/01_03_factory-method_460x349.webp 460w, img/01_03_factory-method_941x698.webp 941w"
+                        sizes="(min-width: 1280px) 840px, (min-width: 1000px) calc(83.08vw - 207px), calc(100vw - 10rem)"
+                        class="uml-image" title="Примерна UML диаграма на Метод фабрика" alt="Примерна UML диаграма на Метод фабрика" loading="lazy" width="941" height="698">
                     <figcaption>Фигура 3. Примерна UML диаграма на <em>Метод фабрика</em>.</figcaption>
                 </figure>
 
@@ -235,7 +243,7 @@ class HorseFactory implements AnimalFactory
                     <em>Статичната фабрика</em> е клас, който съдържа статичен метод за създаване на обекти. Този подход може да доведе до трудности при тестване и рефакториране. Добре е да се помисли за алтернативен подход към проблема.
                 </p>
                 <figure id="fig4">
-                    <img class="uml-image" title="Примерна UML диаграма за Статична фабрика" src="img/01_04_static-factory.webp" alt="Примерна UML диаграма на Статична фабрика" loading="lazy" width="810" height="442">
+                    <img src="img/01_04_static-factory_810x442.webp" class="uml-image" title="Примерна UML диаграма за Статична фабрика" alt="Примерна UML диаграма на Статична фабрика" loading="lazy" width="810" height="442">
                     <figcaption>Фигура 4. Примерна UML диаграма за <em>Статична фабрика</em>.</figcaption>
                 </figure>
 
@@ -299,7 +307,7 @@ final class StaticFactory
                     Тоест, вече може да се правят всичките ООП магии: да се моква, да се тества, да се създават производни класове и т.н.
                 </p>
                 <figure id="fig5">
-                    <img class="uml-image" title="Примерна UML диаграма на Проста фабрика" src="img/01_05_simple-factory.webp" alt="Примерна UML диаграма на Проста фабрика" loading="lazy" width="311" height="367">
+                    <img src="img/01_05_simple-factory_311x367.webp" class="uml-image" title="Примерна UML диаграма на Проста фабрика" alt="Примерна UML диаграма на Проста фабрика" loading="lazy" width="311" height="367">
                     <figcaption>Фигура 5. Примерна UML диаграма на <em>Проста фабрика</em>.</figcaption>
                 </figure>
 
@@ -339,7 +347,11 @@ class CatFactory
                     Няма смисъл да се комбинира бутонче за Линукс с прозорец за Уиндоус и иконки за Мак.
                 </p>
                 <figure id="fig6">
-                    <img class="uml-image" title="Примерна UML диаграма на Абстрактна фабрика" src="img/01_06_abstract-factory.webp" alt="Примерна UML диаграма на Абстрактна фабрика" loading="lazy" width="1676" height="706">
+                    <img 
+                        src="img/01_06_abstract-factory_1676x706.webp" 
+                        srcset="img/01_06_abstract-factory_840x354.webp 840w, img/01_06_abstract-factory_1676x706.webp 1676w"
+                        sizes="(min-width: 1280px) 840px, (min-width: 1000px) calc(83.08vw - 207px), calc(100vw - 10rem)"
+                        class="uml-image" title="Примерна UML диаграма на Абстрактна фабрика" alt="Примерна UML диаграма на Абстрактна фабрика" loading="lazy" width="1676" height="706">
                     <figcaption>Фигура 6. Примерна UML диаграма на <em>Абстрактна фабрика</em>.</figcaption>
                 </figure>
 
@@ -400,7 +412,11 @@ class CityFactory implements Settlement
                     Другият вариант вкючва режисьор, който знае за интерфейса на <em>Строителя</em>, но не знае нищо за конкретните имлементации.
                 </p>
                 <figure id="fig7">
-                    <img class="uml-image" title="Примерна UML диаграма на Строител" src="img/01_07_builder.webp" alt="Примерна UML диаграма на Строител" loading="lazy" width="990" height="869">
+                    <img 
+                        src="img/01_07_builder_990x869.webp"
+                        srcset="img/01_07_builder_396x348.webp 396w, img/01_07_builder_840x737.webp 840w, img/01_07_builder_990x869.webp 990w"
+                        sizes="(min-width: 1280px) 840px, (min-width: 1000px) calc(83.08vw - 207px), calc(100vw - 10rem)"
+                        class="uml-image" title="Примерна UML диаграма на Строител" alt="Примерна UML диаграма на Строител" loading="lazy" width="990" height="869">
                     <figcaption>Фигура 7. Примерна UML диаграма на <em>Строител</em>.</figcaption>
                 </figure>
 
@@ -451,7 +467,7 @@ class Director
                     Добър пример за приложение на този шаблон е при нишките на операционната система.
                 </p>
                 <figure id="fig8">
-                    <img class="uml-image" title="Примерна UML диаграма на Пул" src="img/01_08_pool.webp" alt="Примерна UML диаграма на Пул" loading="lazy" width="550" height="560">
+                    <img src="img/01_08_pool_550x560.webp" class="uml-image" title="Примерна UML диаграма на Пул" alt="Примерна UML диаграма на Пул" loading="lazy" width="550" height="560">
                     <figcaption>Фигура 8. Примерна UML диаграма на <em>Пул</em>.</figcaption>
                 </figure>
 
