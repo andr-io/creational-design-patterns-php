@@ -14,6 +14,8 @@
     --background-code-color: #ece9e9;
     --code-link-color:  #0000eb;
 
+    --image-before-load-color: #2b2b2b;
+
     --box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -87,6 +89,9 @@ figure > img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+
+    background-color: var(--image-before-load-color);
+    color: white;
 }
 
 figure > figcaption {
